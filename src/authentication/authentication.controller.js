@@ -16,6 +16,20 @@ router.post('/login', (req, res) => {
         })
 });
 
+router.post('/updatePassword', (req, res) => {
+    console.log("[AUTH] /updatePassword");
+    tokenService
+        .getUserDataFromRequest(req)
+        .then(payload => authService.updatePassword(payload.user_id, req.body.oldPassword, req.body.newPassword))
+        .then(user => res.jsonp(user))
+        .catch(err => {
+            console.error(err);
+            res.status(500);
+            res.send('Error actualizando contrasena');
+        });
+});
+
+/** AUX METHOD */
 router.get('/generatePassword', (req, res) => {
     const password = req.query['password'];
     const codedPassword = authService.generatePassword(password);
